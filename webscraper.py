@@ -10,6 +10,7 @@ def linkToped(originalUrl, searchTerm):
 
 def handleToped(driverItem, searchTerm, originalUrl):
     soup = []
+    items = [] #Intialize empty items array
     url = linkToped(originalUrl, searchTerm)
     driverItem.get(url)
     i = 350
@@ -24,7 +25,6 @@ def handleToped(driverItem, searchTerm, originalUrl):
         new_height = driverItem.execute_script("return document.body.scrollHeight")
 
         i += 350  # Add i + 350 every loop
-        items = [] #Intialize empty items array
 
         # Check if the i is greater than document height
         if (i > new_height):
