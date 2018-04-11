@@ -8,8 +8,7 @@ def linkToped(originalUrl, searchTerm):
     finalSearchTerm = originalUrl + searchTerm
     return finalSearchTerm
 
-def handleToped(driverItem, searchTerm, originalUrl):
-    soup = []
+def handleToped(driverItem, originalUrl, searchTerm):
     items = [] #Intialize empty items array
     url = linkToped(originalUrl, searchTerm)
     driverItem.get(url)
@@ -17,10 +16,9 @@ def handleToped(driverItem, searchTerm, originalUrl):
     while True:
         # sleep
         sleep(0.5)
-
         # Scroll down to bottom by 350 every loop
         driverItem.execute_script("window.scrollTo(0, " + str(i) + ");")
-
+        soup = [] #Intialize empty soup array or page source
         # Get the height of the document
         new_height = driverItem.execute_script("return document.body.scrollHeight")
 
@@ -32,32 +30,29 @@ def handleToped(driverItem, searchTerm, originalUrl):
             soup = BeautifulSoup(driverItem.page_source, 'lxml')
             break  # break the loop
 
-    if "hot" not in driverItem.current_url:
-        # find all product card
-        page = soup.find_all('div', class_="_27sG_y4O")
+    # find all product card
+    page = soup.find_all('div', class_="_27sG_y4O")
 
-        # loop every product card in pages
-        for item in page:
-            # find the images inside the product card div
-            images = item.find('div', class_="lTz_j9mr").find('img')
+    # loop every product card in pages
+    for item in page:
+        # find the images inside the product card div
+        images = item.find('div', class_="lTz_j9mr").find('img')
 
-            # find the names inside the product card div
-            name = item.find('span', class_="_1fFgipsd")
+        # find the names inside the product card div
+        name = item.find('span', class_="_1fFgipsd")
 
-            # find the price inside the product card div
-            price = item.find('span', class_="_2Z7a1qvz")
+        # find the price inside the product card div
+        price = item.find('span', class_="_2Z7a1qvz")
 
-            #remove all string from price 
-            price = re.sub(r"\D", "", price.get_text())
+        #remove all string from price 
+        price = re.sub(r"\D", "", price.get_text())
 
-            #get product link
-            link = item.a['href']
-            items.append({
-                "images": images['src'], 
-                "name": name.get_text(), 
-                "price": price, 
-                "link": link
-            })
-    else:
-        items = []
+        #get product link
+        link = item.a['href']
+        items.append({
+            "images": images['src'], 
+            "name": name.get_text(), 
+            "price": price, 
+            "link": link
+        })
     return items
