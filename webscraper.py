@@ -38,8 +38,6 @@ def handleToped(driverItem, searchTerm, originalUrl):
 
         # loop every product card in pages
         for item in page:
-            print(item.a['href'])
-
             # find the images inside the product card div
             images = item.find('div', class_="lTz_j9mr").find('img')
 

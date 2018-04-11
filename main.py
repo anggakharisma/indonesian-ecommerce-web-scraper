@@ -11,3 +11,5 @@ urlBukaLapak = "https://www.bukalapak.com/products?utf8=%E2%9C%93&search%5Bhasht
 options = webdriver.ChromeOptions()
 options.add_argument('headless')
 driver = webdriver.Chrome(executable_path=r"C:\Libs\chromedriver.exe", chrome_options=options)
+
+print(webscraper.handleToped(driver, "asbak", urlToped))
