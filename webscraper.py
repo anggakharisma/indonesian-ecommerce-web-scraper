@@ -2,15 +2,16 @@ import re
 from bs4 import BeautifulSoup
 from time import sleep
 
-def linkToped(originalUrl, searchTerm):
+def handleSearchLink(originalUrl, searchTerm):
     searchTerm = searchTerm.lower()
     searchTerm = re.sub(r'\s+', '+', searchTerm)
     finalSearchTerm = originalUrl + searchTerm
     return finalSearchTerm
 
+
 def handleToped(driverItem, originalUrl, searchTerm):
     items = [] #Intialize empty items array
-    url = linkToped(originalUrl, searchTerm)
+    url = handleSearchLink(originalUrl, searchTerm)
     driverItem.get(url)
     i = 350
     while True:
@@ -77,3 +78,27 @@ def handleToped(driverItem, originalUrl, searchTerm):
                 "price": int(price)
             })
     return items
+
+def handleBukaLapak(driverItem, originalUrl, searchTerm):
+    items = [] #Intialize empty items array
+    url = handleSearchLink(originalUrl, searchTerm)
+    driverItem.get(url)
+    i = 350
+    while True:
+        # sleep
+        sleep(0.5)
+        # Scroll down to bottom by 350 every loop
+        driverItem.execute_script("window.scrollTo(0, " + str(i) + ");")
+        soup = [] #Intialize empty soup array or page source
+        # Get the height of the document
+        new_height = driverItem.execute_script("return document.body.scrollHeight")
+
+        i += 350  # Add i + 350 every loop
+
+        # Check if the i is greater than document height
+        if (i > new_height):
+            # set the page source to using beautiful soup
+            soup = BeautifulSoup(driverItem.page_source, 'lxml')
+            break  # break the loop
+    items = soup.find_all('div', class_="product-card")
+    return items[0]
