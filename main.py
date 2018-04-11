@@ -12,4 +12,4 @@ options = webdriver.ChromeOptions()
 # options.add_argument('headless')
 driver = webdriver.Chrome(executable_path=r"C:\Libs\chromedriver.exe", chrome_options=options)
 
-print(webscraper.handleToped(driver, urlToped, "asbak"))
+print(webscraper.handleToped(driver, urlToped, "hdd enclosure"))

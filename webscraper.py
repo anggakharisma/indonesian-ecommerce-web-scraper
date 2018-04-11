@@ -30,29 +30,50 @@ def handleToped(driverItem, originalUrl, searchTerm):
             soup = BeautifulSoup(driverItem.page_source, 'lxml')
             break  # break the loop
 
-    # find all product card
-    page = soup.find_all('div', class_="_27sG_y4O")
+    if "hot" not in driverItem.current_url:
+        # find all product card
+        page = soup.find_all('div', class_="_27sG_y4O")
 
-    # loop every product card in pages
-    for item in page:
-        # find the images inside the product card div
-        images = item.find('div', class_="lTz_j9mr").find('img')
+        # loop every product card in pages
+        for item in page:
+            # find the images inside the product card div
+            images = item.find('div', class_="lTz_j9mr").find('img')
+            # print(images)
+            # find the names inside the product card div
+            name = item.find('span', class_="_1fFgipsd")
 
-        # find the names inside the product card div
-        name = item.find('span', class_="_1fFgipsd")
+            # find the price inside the product card div
+            price = item.find('span', class_="_2Z7a1qvz")
 
-        # find the price inside the product card div
-        price = item.find('span', class_="_2Z7a1qvz")
+            #remove all string from price 
+            price = re.sub(r"\D", "", price.get_text())
 
-        #remove all string from price 
-        price = re.sub(r"\D", "", price.get_text())
+            #get product link
+            link = item.a['href']
+            items.append({
+                "images": images['src'], 
+                "name": name.get_text(), 
+                "price": int(price), 
+                "link": link
+            })
+    else:
+        # find all product card
+        page = soup.find('div', id="product-results")
+        productCard = page.find_all('div', class_="product-card ")
+        for product in productCard:
+            image = product.a.img['src']
 
-        #get product link
-        link = item.a['href']
-        items.append({
-            "images": images['src'], 
-            "name": name.get_text(), 
-            "price": price, 
-            "link": link
-        })
+            name = product.find('div', class_="detail__name js-ellipsis ng-binding").get_text()
+
+            link = product.a['href']
+
+            price = product.find('span', class_="detail__price ng-binding")
+            price = re.sub(r"\D", "", price.get_text())
+
+            items.append({
+                "image": image,
+                "name": name,
+                "link": link,
+                "price": int(price)
+            })
     return items
