@@ -1,6 +1,7 @@
 import re
 from bs4 import BeautifulSoup
 from time import sleep
+from flask import Flask
 
 
 def loopThroughPages(driverItem):
@@ -24,8 +25,7 @@ def loopThroughPages(driverItem):
     return soup
 
 def handleSearchLink(originalUrl, searchTerm):
-    searchTerm = searchTerm.lower()
-    searchTerm = re.sub(r'\s+', '+', searchTerm)
+    searchTerm = re.sub(r'\s+', '+', searchTerm.lower())
     finalSearchTerm = originalUrl + searchTerm
     return finalSearchTerm
 
