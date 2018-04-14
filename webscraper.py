@@ -1,7 +1,6 @@
 import re
 from bs4 import BeautifulSoup
 from time import sleep
-from flask import Flask
 
 
 def loopThroughPages(driverItem):
@@ -95,14 +94,15 @@ def handleBukaLapak(driverItem, originalUrl, searchTerm):
 
     #loop throught product items
     for item in productCard:
-        images = ""
-        name = ""
-        price = ""
+        images = item.picture.source['srcset']
+        name = item.h3.a.get_text()
+        price = item.find('div', {"class": "product-price"})
         links = item.a['href']
         items.append({
             "images": images,
             "name" : name,
-            "price": price,
+            "price": int(price['data-reduced-price']),
             "links": links
         })
     return items
+    
