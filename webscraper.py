@@ -8,7 +8,7 @@ def loopThroughPages(driverItem):
     soup = [] #Intialize empty soup array or page source
     while True:
         # sleep
-        sleep(0.5)
+        sleep(0.25)
         # Scroll down to bottom by 350 every loop
         driverItem.execute_script("window.scrollTo(0, " + str(i) + ");")
         # Get the height of the document
@@ -59,7 +59,7 @@ def handleToped(driverItem, originalUrl, searchTerm):
                 "images": images['src'], 
                 "name": name.get_text(), 
                 "price": int(price), 
-                "link": link
+                "links": link
             })
     else:
         # find all product card
@@ -76,12 +76,13 @@ def handleToped(driverItem, originalUrl, searchTerm):
             price = re.sub(r"\D", "", price.get_text())
 
             items.append({
-                "image": image,
+                "images": image,
                 "name": name,
-                "link": link,
+                "links": link,
                 "price": int(price)
             })
-    return items
+    itemsSorted = sorted(items, key=lambda k: k['price'])
+    return itemsSorted
 
 def handleBukaLapak(driverItem, originalUrl, searchTerm):
     items = [] #Intialize empty items array
@@ -95,6 +96,7 @@ def handleBukaLapak(driverItem, originalUrl, searchTerm):
     #loop throught product items
     for item in productCard:
         images = item.picture.source['srcset']
+        images = re.sub('\.webp$', '', images)
         name = item.h3.a.get_text()
         price = item.find('div', {"class": "product-price"})
         links = item.a['href']
@@ -104,5 +106,5 @@ def handleBukaLapak(driverItem, originalUrl, searchTerm):
             "price": int(price['data-reduced-price']),
             "links": links
         })
-    return items
-    
+    itemsSorted = sorted(items, key=lambda k: k['price'])
+    return itemsSorted
