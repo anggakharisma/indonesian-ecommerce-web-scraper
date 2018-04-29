@@ -90,7 +90,7 @@ def handleBukaLapak(driverItem, originalUrl, searchTerm):
     driverItem.get(url)
     
     soup = loopThroughPages(driverItem)
-    #get product carts
+    #get product cards
     productCard = soup.find_all('div', class_="product-card")
 
     #loop throught product items
